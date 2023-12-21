@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import timezone
-from product.models import Clothe
+from product.models import Clothe, Categorie
 # Create your views here.
 
 # def product_view(request):
@@ -32,3 +32,13 @@ def current_date_view(request):
 def goodbye_view(request):
     if request.method == 'GET':
         return HttpResponse('Goodbye user!')
+
+def category_list_view(request):
+    if request.method == 'GET':
+        categories = Categorie.objects.all()
+
+        context = {
+            'categories': categories,
+        }
+
+        return render(request, 'categories.html', context=context)
