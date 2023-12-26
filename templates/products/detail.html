@@ -1,0 +1,33 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+<h1>CLothe Detail</h1>
+
+<h2>{{ clothe.title }} {{ clothe.rate }}</h2>
+
+<p>{{ Clothe.text }}</p>
+
+<img src="/media/{{ clothe.image }}">
+
+<p>{{ clothe.created_at }}</p>
+
+{% for category in clothe.categories.all %}
+    <a class="btn btn-primary" href="#">
+        <p>
+            {{ category.title }}
+        </p>
+    </a>
+{% endfor %}
+
+
+{% for review in clothe.reviews.all %}
+        <p>
+            {{ review.text }}
+        </p>
+{% endfor %}
+
+
+{% endblock %}
