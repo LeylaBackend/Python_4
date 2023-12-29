@@ -1,33 +1,37 @@
-
 {% extends 'index.html' %}
 
 {% block content %}
-
 
 <h1>CLothe Detail</h1>
 
 <h2>{{ clothe.title }} {{ clothe.rate }}</h2>
 
-<p>{{ Clothe.text }}</p>
+<p>{{ clothe.text }}</p>
 
 <img src="/media/{{ clothe.image }}">
 
 <p>{{ clothe.created_at }}</p>
 
 {% for category in clothe.categories.all %}
-    <a class="btn btn-primary" href="#">
-        <p>
-            {{ category.title }}
-        </p>
-    </a>
+<a class="btn btn-primary" href="#">
+    <p>
+        {{ category.title }}
+    </p>
+</a>
 {% endfor %}
-
 
 {% for review in clothe.reviews.all %}
-        <p>
-            {{ review.text }}
-        </p>
+<p>
+    {{ review.text }}
+</p>
 {% endfor %}
 
+<div class="create_comment">
+    <form action="/products/{{ clothe.product_id }}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input style="height: 40px; width: 150px;" type="submit" value="Add comment">
+    </form>
+</div>
 
 {% endblock %}

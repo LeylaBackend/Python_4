@@ -1,14 +1,10 @@
-from django.shortcuts import render
+from django.db import models
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.utils import timezone
 from product.models import Clothe, Category, Review
+from product.forms import ProductForm, CategoryForm, ReviewForm
 
-
-# Create your views here.
-
-# def product_view(request):
-#     if request.method == 'GET':
-#         return HttpResponse('Product View')
 
 def hello_view(request):
     return render(request, 'index.html')
@@ -21,13 +17,13 @@ def main_view(request):
 
 def products_list_view(request):
     if request.method == 'GET':
-        products = Clothe.objects.all()
+        if request.method == 'GET':
+            products = Clothe.objects.all()
+            context = {
+                'products': products
+            }
 
-        context = {
-            'products': products
-        }
-
-    return render(request, 'products/products.html', context=context)
+        return render(request, 'products/products.html', context=context)
 
 
 def current_date_view(request):
@@ -48,7 +44,8 @@ def category_list_view(request):
             'categories': categories,
         }
 
-        return render(request, 'categories.html', context=context)
+        return render(request, 'category/categories.html', context=context)
+
 
 def product_detail_view(request, product_id):
     if request.method == 'GET':
@@ -61,8 +58,8 @@ def product_detail_view(request, product_id):
 
         context = {
             'clothe': clothe,
-            'categories': categories,  # Pass the categories associated with the clothe
-            'reviews': review
+            'categories': categories,
+            'reviews': review,
         }
 
         return render(
@@ -70,3 +67,77 @@ def product_detail_view(request, product_id):
             'products/detail.html',
             context=context
         )
+    if request.method == 'POST':
+        product = Clothe.objects.get(id=product_id)
+        data = request.POST
+        form = ReviewForm(data=data)
+
+        if form.is_valid():
+            Review.objects.create(
+                text=form.cleaned_data.get('text'),
+                product=product
+
+            )
+
+        context = {
+            'product': product,
+            'review': product.reviews.all(),
+            'form': form
+        }
+        return render(request, 'products/detail.html', context=context)
+
+
+def product_create_view(requests, form=None):
+    if requests.method == 'GET':
+        context = {
+            'form': ProductForm,
+        }
+
+        return render(requests, 'products/create.html', context=context)
+
+    if requests.method == 'POST':
+        form = ProductForm(requests.POST, requests.FILES)
+
+        if form.is_valid():
+            Clothe.objects.create(
+                image=form.cleaned_data['image'],
+                title=form.cleaned_data['title'],
+                text=form.cleaned_data['text'],
+                price=form.cleaned_data['price'],
+            )
+
+        return redirect('/products/')
+
+    context = {
+        'form': form,
+    }
+
+    return render(requests, 'products/create.html', context=context)
+
+
+def category_create_view(requests, form=None):
+    if requests.method == 'GET':
+
+        context = {
+            'form': CategoryForm,
+        }
+
+        return render(requests, 'category/create.html', context=context)
+
+    elif requests.method == 'POST':
+        form = CategoryForm(requests.POST)
+
+        if form.is_valid():
+            Clothe.objects.create(
+                title=form.cleaned_data['title'],
+            )
+
+        return redirect('/category/')
+
+    context = {
+        'form': form,
+    }
+
+    return render(requests, 'category/create.html', context=context)
+
+

@@ -5,9 +5,10 @@
 {% for category in categories %}
     <a href="">
         <p>
-            #{{ category.name }}
+            {{ category.title }}
         </p>
     </a>
     <br>
 {% endfor %}
-{% endblock %}
+{%endblock%}
+
