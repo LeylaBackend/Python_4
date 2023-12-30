@@ -128,7 +128,7 @@ def category_create_view(requests, form=None):
         form = CategoryForm(requests.POST)
 
         if form.is_valid():
-            Clothe.objects.create(
+            Category.objects.create(
                 title=form.cleaned_data['title'],
             )
 
