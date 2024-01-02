@@ -1,4 +1,5 @@
 from django import forms
+from product.models import Review
 
 class ProductForm(forms.Form):
     image = forms.ImageField(
@@ -24,9 +25,9 @@ class CategoryForm(forms.Form):
     )
 
 class ReviewForm(forms.Form):
-    text = forms.CharField(
-        widget=forms.Textarea,
-        label='Ответ для поста'
-    )
+        text = forms.CharField(
+            widget=forms.Textarea,
+            label='Ответ для поста'
+        )
 
 

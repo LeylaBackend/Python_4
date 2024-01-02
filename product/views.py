@@ -59,7 +59,7 @@ def product_detail_view(request, product_id):
         context = {
             'clothe': clothe,
             'categories': categories,
-            'reviews': review,
+            'review': review
         }
 
         return render(
@@ -67,24 +67,21 @@ def product_detail_view(request, product_id):
             'products/detail.html',
             context=context
         )
-    if request.method == 'POST':
-        product = Clothe.objects.get(id=product_id)
-        data = request.POST
-        form = ReviewForm(data=data)
-
-        if form.is_valid():
-            Review.objects.create(
-                text=form.cleaned_data.get('text'),
-                product=product
-
-            )
-
-        context = {
-            'product': product,
-            'review': product.reviews.all(),
-            'form': form
-        }
-        return render(request, 'products/detail.html', context=context)
+    # elif request.method == 'POST':
+    #     product = Clothe.objects.get(id=product_id)
+    #
+    #     # if form.is_valid():
+    #     #     Review.objects.create(
+    #     #         text=form.cleaned_data.get('text'),
+    #     #         product=product
+    #     #
+    #     #     )
+    #
+    #     context = {
+    #         'product': product,
+    #         'review': product.reviews.all(),
+    #     }
+    #     return render(request, 'products/detail.html', context=context)
 
 
 def product_create_view(requests, form=None):
@@ -139,5 +136,24 @@ def category_create_view(requests, form=None):
     }
 
     return render(requests, 'category/create.html', context=context)
+
+def review_product_view(request):
+    if request.method == 'GET':
+        context = {
+            'form': ReviewForm
+        }
+        return render(request, 'products/detail.html', context=context)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/products')
+        else:
+            context = {
+                'form': form
+
+            }
+            return render(request, 'products/detail.html', context=context)
 
 

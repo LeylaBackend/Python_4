@@ -25,13 +25,11 @@
     {{ review.text }}
 </p>
 {% endfor %}
-
-<div class="create_comment">
-    <form action="/products/{{ clothe.product_id }}" method="POST">
+  <h1>Write Review</h1>
+        <form action="." enctype="multipart/form-data" method="POST">
         {% csrf_token %}
-        {{ comment_form.as_p }}
-        <input style="height: 40px; width: 150px;" type="submit" value="Add comment">
-    </form>
-</div>
-
+        {{ form.as_p }}
+            <p>{{ form.clothe }}</p>
+            <button type="submit">Написать отзыв</button>
+        </form>
 {% endblock %}
