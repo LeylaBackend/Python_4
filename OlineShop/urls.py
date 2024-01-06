@@ -40,6 +40,6 @@ urlpatterns = [
     # path('auth/register/', register_view),
     # path('auth/login/', login_view),
     # path('auth/logout', logout_view),
-    # path('auth/profile/', profile_view)
+    # path('auth/profile/', profile_view),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

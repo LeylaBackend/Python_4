@@ -20,16 +20,6 @@
 </a>
 {% endfor %}
 
-{% for review in clothe.reviews.all %}
-<p>
-    {{ review.text }}
-</p>
-{% endfor %}
-  <h1>Write Review</h1>
-        <form action="." enctype="multipart/form-data" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-            <p>{{ form.clothe }}</p>
-            <button type="submit">Написать отзыв</button>
-        </form>
+<a href="update/" class="btn btn-primary">Update</a>
+
 {% endblock %}

@@ -1,6 +1,13 @@
 {% extends 'index.html' %}
 {% block content %}
 
+<h1>Product List</h1>
+
+<form action="" method="get">
+    <input type="text" name="search" placeholder="Search">
+    <button type="submit">Search</button>
+</form>
+
 
 {% for product in products %}
 
@@ -18,5 +25,12 @@
 
 {% endfor %}
 
+<div>
+    {% for page in max_page %}
+        <a href="?page={{ page }}" method="get">
+            {{ page }}
+        </a>
+    {% endfor %}
+</div>
 
 {% endblock %}

@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from product.models import Clothe, Category, Review
 from product.forms import ProductForm, CategoryForm, ReviewForm
-
+from django.conf import settings
 
 def hello_view(request):
     return render(request, 'index.html')
@@ -17,13 +17,29 @@ def main_view(request):
 
 def products_list_view(request):
     if request.method == 'GET':
-        if request.method == 'GET':
-            products = Clothe.objects.all()
-            context = {
-                'products': products
-            }
+        products = Clothe.objects.all()
 
-        return render(request, 'products/products.html', context=context)
+        search = request.GET.get('search')
+
+
+        if search:
+              products = products.filter(title__contains=search)
+
+        max_page = products.__len__() / settings.OBJECT_PER_PAGE
+
+        if round(max_page) < max_page:
+            max_page += 1
+        else:
+            max_page = round(max_page)
+
+
+
+        context = {
+            'products': products,
+            'max_page': range(1, int(max_page) + 1),
+        }
+
+    return render(request, 'products/products.html', context=context)
 
 
 def current_date_view(request):
@@ -156,4 +172,28 @@ def review_product_view(request):
             }
             return render(request, 'products/detail.html', context=context)
 
+def product_update_view(request, product_id):
+    try:
+        product = Clothe.objects.get(id=product_id)
+    except Clothe.DoesNotExists:
+        return render(request, '404.html')
 
+    if request.method == 'GET':
+        context = {
+            'form': ProductForm(instance=product),
+            'product': product,
+        }
+        return render(request, 'products/update.html', context=context)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/products/')
+        else:
+            context = {
+                'form': form,
+                'product': product,
+            }
+            return render(request, 'products/update.html', context=context)
